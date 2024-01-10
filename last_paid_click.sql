@@ -48,4 +48,3 @@ or utm_medium = 'cpp' or utm_medium = 'tg'or utm_medium = 'social'
 group by 1,2,3,4,5,6,7,9,10
 order by visit_date desc) as tab
 order by amount desc nulls last, visit_date asc, utm_source asc, utm_medium asc, utm_campaign asc
-limit 10
