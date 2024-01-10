@@ -40,4 +40,4 @@ on s.visitor_id = l.visitor_id
 group by 1,2,3,4, s.visitor_id, l.lead_id 
 order by visit_date desc) as tab
 order by 9 desc nulls last, visit_date asc, visitors_count desc, utm_source asc, utm_medium asc, utm_campaign asc
-limit 15
+
