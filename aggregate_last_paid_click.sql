@@ -1,5 +1,5 @@
-select visit_date,utm_source, utm_medium, utm_campaign,
-visitors_count, total_cost, leads_count, purchases_count, revenue
+select to_char(visit_date, 'yyyy-mm-dd') as visit_date, visitors_count, utm_source, utm_medium, utm_campaign,
+ total_cost, leads_count, purchases_count, revenue
 from (select 
 visit_date ,
 va.utm_source, va.utm_medium, va.utm_campaign,
@@ -20,8 +20,8 @@ order by visit_date desc) as tab
 
 union
 
-select visit_date,utm_source, utm_medium, utm_campaign,
-visitors_count, total_cost, leads_count, purchases_count, revenue
+select to_char(visit_date, 'yyyy-mm-dd') as visit_date, visitors_count, utm_source, utm_medium, utm_campaign,
+ total_cost, leads_count, purchases_count, revenue
 from (select 
 visit_date ,
 ya.utm_source, ya.utm_medium, ya.utm_campaign,
@@ -39,5 +39,5 @@ left join leads as l
 on s.visitor_id = l.visitor_id 
 group by 1,2,3,4, s.visitor_id, l.lead_id 
 order by visit_date desc) as tab
-order by 9 desc nulls last, visit_date asc, visitors_count desc, utm_source asc, utm_medium asc, utm_campaign asc
+order by 9 desc nulls last, 1 asc, visitors_count desc, utm_source asc, utm_medium asc, utm_campaign asc
 
