@@ -210,3 +210,18 @@ where status_id = '142'
 order by s.visit_date asc, l.created_at asc
 ) as tab
 
+--вычисления где вычислялся промежуток покрытия 90%
+--select min/max(time)
+select count(visitor_id)
+from(
+select 
+distinct s.visitor_id , lead_id , s.visit_date ,
+l.created_at, status_id, created_at - visit_date as time
+from sessions s 
+left join leads l 
+on s.visitor_id = l.visitor_id 
+and l.created_at > s.visit_date
+where status_id = '142'
+order by s.visit_date asc, l.created_at asc
+) as tab
+where time between '00:17:16.678171' and '23 days 09:25:25'
