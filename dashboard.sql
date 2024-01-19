@@ -166,3 +166,47 @@ and s.medium = ya.utm_medium
 and s.campaign = ya.utm_campaign 
 where utm_source is not null
 group by  1, 2,3) as tab
+
+
+--Вычисления для выявлелия кореляции между запуском рекламы и ростом органики
+select count(distinct s.visitor_id)
+from sessions s 
+left join vk_ads va 
+on s.source = va.utm_source 
+and s.medium = va.utm_medium 
+and s.campaign = va.utm_campaign 
+left join leads l 
+on s.visitor_id = l.visitor_id 
+where 
+utm_source is null and 
+created_at <= '2023-06-30 18:28:25.000'
+-- created_at <= '2023-06-01 01:58:59.000'
+
+
+select max(created_at)
+--min(created_at)
+from(
+select 
+distinct s.visitor_id , lead_id , s.visit_date ,
+l.created_at, status_id, created_at - visit_date as time
+from sessions s 
+left join leads l 
+on s.visitor_id = l.visitor_id 
+where status_id = '142'
+order by s.visit_date asc, l.created_at asc
+) as tab
+
+--Вычисление времени когда можно начинать анализ дашборда
+select avg(time)
+from(
+select 
+distinct s.visitor_id , lead_id , s.visit_date ,
+l.created_at, status_id, created_at - visit_date as time
+from sessions s 
+left join leads l 
+on s.visitor_id = l.visitor_id 
+and l.created_at > s.visit_date
+where status_id = '142'
+order by s.visit_date asc, l.created_at asc
+) as tab
+
