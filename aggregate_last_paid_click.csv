@@ -1,16 +1,16 @@
-"visit_date","utm_source","utm_medium","utm_campaign","visitors_count","total_cost","leads_count","purchases_count","revenue"
-2023-06-01 10:40:28.000,yandex,cpc,prof-frontend,1,1827336,1,3319,789888810
-2023-06-01 14:57:00.000,yandex,cpc,prof-frontend,2,1827336,2,3319,598435614
-2023-06-01 19:39:00.000,yandex,cpc,prof-frontend,1,1827336,1,3319,556347375
-2023-06-01 11:24:00.000,yandex,cpc,prof-frontend,1,1827336,1,3319,445077900
-2023-06-01 09:20:00.000,yandex,cpc,prof-frontend,1,1827336,1,3319,398280000
-2023-06-01 19:14:00.000,yandex,cpc,prof-frontend,1,1827336,1,3319,395757560
-2023-06-01 17:47:00.000,yandex,cpc,prof-frontend,2,1827336,2,3319,376792794
-2023-06-01 08:39:00.000,yandex,cpc,prof-python,2,1253608,2,2237,338216504
-2023-06-01 08:33:02.000,yandex,cpc,prof-python,1,1253608,1,2237,299981700
-2023-06-01 18:42:00.000,yandex,cpc,prof-python,2,1253608,2,2237,281850815
-2023-06-01 09:47:00.000,yandex,cpc,prof-frontend,4,1827336,4,3319,265971384
-2023-06-01 09:03:00.000,yandex,cpc,prof-frontend,2,1827336,2,3319,261371250
-2023-06-01 15:54:00.000,yandex,cpc,prof-frontend,1,1827336,1,3319,239372918
-2023-06-01 17:43:00.000,yandex,cpc,prof-frontend,3,1827336,3,3319,238659333
-2023-06-01 08:35:20.000,yandex,cpc,prof-python,1,1253608,1,2237,224986275
+"visit_date","visitors_count","utm_source","utm_medium","utm_campaign","total_cost","leads_count","purchases_count","revenue"
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,789888810
+"2023-06-01",2,yandex,cpc,prof-frontend,1827336,2,3319,598435614
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,556347375
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,445077900
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,398280000
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,395757560
+"2023-06-01",2,yandex,cpc,prof-frontend,1827336,2,3319,376792794
+"2023-06-01",2,yandex,cpc,prof-python,1253608,2,2237,338216504
+"2023-06-01",1,yandex,cpc,prof-python,1253608,1,2237,299981700
+"2023-06-01",2,yandex,cpc,prof-python,1253608,2,2237,281850815
+"2023-06-01",4,yandex,cpc,prof-frontend,1827336,4,3319,265971384
+"2023-06-01",2,yandex,cpc,prof-frontend,1827336,2,3319,261371250
+"2023-06-01",1,yandex,cpc,prof-frontend,1827336,1,3319,239372918
+"2023-06-01",3,yandex,cpc,prof-frontend,1827336,3,3319,238659333
+"2023-06-01",1,yandex,cpc,prof-python,1253608,1,2237,224986275
