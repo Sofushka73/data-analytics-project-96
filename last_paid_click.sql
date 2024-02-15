@@ -5,7 +5,8 @@ select
     l.closing_reason, l.status_id
 from
     (
-        select distinct on (s.visitor_id) s.visitor_id,
+        select distinct on (s.visitor_id)
+            s.visitor_id,
             s.visit_date, s.source, s.medium,
             s.campaign
         from sessions as s
