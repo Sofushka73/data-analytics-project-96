@@ -37,11 +37,11 @@ tab2 as (
         tab1.source, tab1.medium, tab1.campaign,
         cast(visit_date as date) as visit_date, count(visitor_id)
         as visitors_count,
-        count(visitor_id) filter(where tab1.created_at is not null)
+        count(visitor_id) filter (where tab1.created_at is not null)
         as leads_count,
-        count(visitor_id) filter(where tab1.status_id = 142)
+        count(visitor_id) filter (where tab1.status_id = 142)
         as purchases_count,
-        sum(amount) filter(where tab1.status_id = 142) as revenue
+        sum(amount) filter (where tab1.status_id = 142) as revenue
     from tab1
     group by
         tab1.source, tab1.medium, tab1.campaign, cast(visit_date as date)
