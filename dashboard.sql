@@ -24,14 +24,14 @@ from (
         on
             s.medium = va.utm_medium
             and s.source = va.utm_source
-	    and s.campaign = va.utm_campaign
+            and s.campaign = va.utm_campaign
     left join leads as l
         on
             s.visitor_id = l.visitor_id
     group by
         s.visitor_id, l.lead_id, s.visit_date,
         va.utm_campaign, va.utm_source, va.utm_medium
-    ) as tab
+) as tab
 where utm_campaign is not null
 group by utm_campaign, utm_source, utm_medium
 union
@@ -39,7 +39,7 @@ select
     utm_campaign, utm_source, utm_medium,
     round(sum(total_cost) / sum(visitors_count)) as cpu,
     case
-	when sum(leads_count) = 0 then 0
+        when sum(leads_count) = 0 then 0
 	else round(sum(total_cost) / sum(leads_count))
     end as cpi,
     case
@@ -67,42 +67,44 @@ from (
         on
             s.visitor_id = l.visitor_id
     group by
-        s.visitor_id, l.lead_id, visit_date, ya.utm_campaign, ya.utm_source,
-	ya.utm_medium
+        s.visitor_id, l.lead_id, s.visit_date, ya.utm_campaign, ya.utm_source,
+        ya.utm_medium
 ) as tab
 where utm_campaign is not null
 group by
     utm_campaign, utm_source, utm_medium
 
-
 --dashboard day/week/month count
+
 select
     va.utm_source, va.utm_medium, va.utm_campaign,
-    date_trunc('month', visit_date) as visit_date,
-    count(distinct visitor_id)
+    date_trunc('month', s.visit_date) as visit_date,
+    count(distinct s.visitor_id) as visitors_count
 from sessions as s
 left join vk_ads as va
     on
 	s.source = va.utm_source
         and s.medium = va.utm_medium
         and s.campaign = va.utm_campaign
-where utm_source is not null
+where va.utm_source is not null
 group by date_trunc('month', visit_date), va.utm_source, va.utm_medium, va.utm_campaign
 union
 select
     ya.utm_source, ya.utm_medium, ya.utm_campaign,
-    date_trunc('month', visit_date) as visit_date,
-    count(distinct visitor_id)
+    date_trunc('month', s.visit_date) as visit_date,
+    count(distinct s.visitor_id) as visitors_count
 from sessions as s
 left join ya_ads as ya
     on
-	s.source = ya.utm_source
+        s.source = ya.utm_source
         and s.medium = ya.utm_medium
         and s.campaign = ya.utm_campaign
-where utm_source is not null
-group by date_trunc('month', visit_date), ya.utm_source, ya.utm_medium, ya.utm_campaign
+where ya.utm_source is not null
+group by date_trunc('month', s.visit_date), ya.utm_source, ya.utm_medium,
+    ya.utm_campaign
 
 --dashboard conversion
+
 select
 (count(distinct l.lead_id) * 100.0) / count(distinct s.visitor_id) as conversion
 from sessions as s
@@ -111,15 +113,17 @@ left join leads as l
 	s.visitor_id = l.visitor_id
 union
 select
-    (l.leads_count * 100.0) / l.lead_count  as conversion
+    (tab.leads_count * 100.0) / tab.lead_count as conversion
 from (
     select
         count(distinct l.lead_id) as lead_count,
-        count(distinct l.lead_id) filter (where l.status_id = '142') as leads_count
+        count(distinct l.lead_id) filter (where l.status_id = '142')
+	as leads_count
     from leads
 ) as tab
 
 --dashboard profit
+
 select
     tab.utm_source, tab.utm_medium, tab.utm_campaign,
     tab.revenue - tab.total_cost as profit
@@ -137,32 +141,33 @@ from (
     left join leads as l
         on
             s.visitor_id  = l.visitor_id
-    where utm_source is not null
+    where va.utm_source is not null
     group by va.utm_source, va.utm_medium, va.utm_campaign
 ) as tab
 union
-select 
+select
     tab.utm_source, tab.utm_medium, tab.utm_campaign,
     tab.revenue - tab.total_cost as profit
 from (
     select
         ya.utm_source, ya.utm_medium, ya.utm_campaign,
-        sum (ya.daily_spent) as total_cost,
+        sum(ya.daily_spent) as total_cost,
         sum(l.amount) as revenue
     from sessions as s
     left join ya_ads as ya
-        on 
+        on
             s.source = ya.utm_source
             and s.medium = ya.utm_medium
             and s.campaign = ya.utm_campaign
     left join leads as l
         on
-            s.visitor_id  = l.visitor_id
-    where utm_source is not null
-    group by  ya.utm_source, ya.utm_medium, ya.utm_campaign
+            s.visitor_id = l.visitor_id
+    where ya.utm_source is not null
+    group by ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
 
 --dashboard day/week/month total cost
+
 select
     utm_source, utm_medium, utm_campaign,
     visit_date, total_cost
@@ -177,17 +182,18 @@ from (
 	    s.source = va.utm_source
             and s.medium = va.utm_medium
             and s.campaign = va.utm_campaign
-    where utm_source is not null
+    where va.utm_source is not null
     group by va.utm_source, va.utm_medium, va.utm_campaign
 ) as tab
 union
 select
     utm_source, utm_medium, utm_campaign,
     visit_date, total_cost
-from(
+from (
     select
         ya.utm_source, ya.utm_medium, ya.utm_campaign,
-        to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd') as visit_date,
+        to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd')
+	as visit_date,
         sum (ya.daily_spent) as total_cost
     from sessions as s
     left join ya_ads as ya
@@ -195,8 +201,8 @@ from(
 	    s.source = ya.utm_source
             and s.medium = ya.utm_medium
             and s.campaign = ya.utm_campaign
-    where utm_source is not null
-    group by  ya.utm_source, ya.utm_medium, ya.utm_campaign
+    where ya.utm_source is not null
+    group by ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
 
 
@@ -212,12 +218,14 @@ left join vk_ads as va
 left join leads as l
     on
 	s.visitor_id = l.visitor_id
-where utm_source is null and created_at <= '2023-06-30 18:28:25.000' 
+where utm_source is null and created_at <= '2023-06-30 18:28:25.000'
+	
 -- created_at <= '2023-06-01 01:58:59.000'
 
-
 select max(created_at)
+	
 --min(created_at)
+	
 from (
     select
         distinct s.visitor_id, l.lead_id,
@@ -232,6 +240,7 @@ from (
 ) as tab
 
 --Вычисление времени когда можно начинать анализ дашборда
+	
 select avg(time)
 from (
     select
@@ -249,7 +258,9 @@ from (
 ) as tab
 
 --вычисления где вычислялся промежуток покрытия 90%
+	
 --select min/max(time)
+	
 select
     count(visitor_id) 
 from (
