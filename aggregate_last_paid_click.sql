@@ -1,27 +1,13 @@
-with tab1 as
-(
-   select distinct
-      on(s.visitor_id) s.visitor_id,
-      s.visit_date,
-      l.created_at,
-      l.status_id,
-      amount,
-      lead_id,
-      closing_reason,
-      medium,
-      source,
-      campaign 
-   from
-      sessions s 
-      left join
-         leads l 
+with tab1 as (
+   select distinct on (s.visitor_id) 
+   s.visitor_id, s.visit_date, l.created_at, l.status_id, l.amount,
+   l.lead_id, l.closing_reason, s.medium, s.source, s.campaign 
+   from sessions s 
+      left join leads l 
          on s.visitor_id = l.visitor_id 
          and s.visit_date <= l.created_at 
-   where
-      medium != 'organic' 
-   order by
-      s.visitor_id,
-      visit_date desc 
+   where medium != 'organic' 
+   order by s.visitor_id, visit_date desc 
 )
 ,
 tab as 
@@ -32,13 +18,8 @@ tab as
       utm_campaign,
       cast(campaign_date as date) as campaign_date,
       sum(daily_spent) as total_cost 
-   from
-      vk_ads va 
-   group by
-      1,
-      2,
-      3,
-      4 
+   from vk_ads va 
+   group by 1, 2, 3, 4 
    union
    select
       utm_source,
@@ -46,13 +27,8 @@ tab as
       utm_campaign,
       cast(campaign_date as date) as campaign_date,
       sum(daily_spent) as total_cost 
-   from
-      ya_ads ya 
-   group by
-      1,
-      2,
-      3,
-      4
+   from ya_ads ya 
+   group by 1, 2, 3, 4
 )
 ,
 tab2 as 
@@ -72,13 +48,8 @@ tab2 as
       sum(amount) filter(
    where
       tab1.status_id = 142) as revenue 
-   from
-      tab1 
-   group by
-      source,
-      medium,
-      campaign,
-      cast(visit_date as date)
+   from tab1 
+   group by source, medium, campaign, cast(visit_date as date)
 )
 select
    to_char(visit_date, 'yyyy-mm-dd') as visit_date,
@@ -90,20 +61,18 @@ select
    leads_count,
    purchases_count,
    revenue 
-from
-   tab2 
-   left join
-      tab 
+from tab2 
+   left join tab 
       on tab2.medium = tab.utm_medium 
       and tab2.source = tab.utm_source 
       and tab2.campaign = tab.utm_campaign 
       and tab2.visit_date = tab.campaign_date 
-where
-   tab2.medium != 'organic' 
+where tab2.medium != 'organic' 
 order by
    9 desc nulls last,
    1 asc,
    visitors_count desc,
    utm_source asc,
    utm_medium asc,
-   utm_campaign asc limit 15
+   utm_campaign asc
+limit 15
