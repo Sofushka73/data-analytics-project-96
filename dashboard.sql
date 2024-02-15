@@ -198,7 +198,7 @@ from (
         ya.utm_source, ya.utm_medium, ya.utm_campaign,
         to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd')
 	as visit_date,
-        sum (ya.daily_spent) as total_cost
+        sum(ya.daily_spent) as total_cost
     from sessions as s
     left join ya_ads as ya
         on 
