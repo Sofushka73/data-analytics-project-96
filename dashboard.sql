@@ -100,7 +100,8 @@ left join ya_ads as ya
         and s.medium = ya.utm_medium
         and s.campaign = ya.utm_campaign
 where ya.utm_source is not null
-group by date_trunc('month', s.visit_date), ya.utm_source, ya.utm_medium,
+group by
+    date_trunc('month', s.visit_date), ya.utm_source, ya.utm_medium,
     ya.utm_campaign
 
 --dashboard conversion
@@ -142,7 +143,8 @@ from (
         on
             s.visitor_id  = l.visitor_id
     where va.utm_source is not null
-    group by va.utm_source, va.utm_medium, va.utm_campaign
+    group by
+        va.utm_source, va.utm_medium, va.utm_campaign
 ) as tab
 union
 select
@@ -163,7 +165,8 @@ from (
         on
             s.visitor_id = l.visitor_id
     where ya.utm_source is not null
-    group by ya.utm_source, ya.utm_medium, ya.utm_campaign
+    group by
+        ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
 
 --dashboard day/week/month total cost
@@ -183,7 +186,8 @@ from (
             and s.medium = va.utm_medium
             and s.campaign = va.utm_campaign
     where va.utm_source is not null
-    group by va.utm_source, va.utm_medium, va.utm_campaign
+    group by
+        va.utm_source, va.utm_medium, va.utm_campaign
 ) as tab
 union
 select
@@ -202,7 +206,8 @@ from (
             and s.medium = ya.utm_medium
             and s.campaign = ya.utm_campaign
     where ya.utm_source is not null
-    group by ya.utm_source, ya.utm_medium, ya.utm_campaign
+    group by
+        ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
 
 
