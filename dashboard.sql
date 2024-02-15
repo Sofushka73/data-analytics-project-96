@@ -7,8 +7,8 @@ select
         else round(sum(total_cost) / sum(leads_count))
     end as cpi,
     case
-	when sum(purchases_count) = 0 then 0
-	else round(sum(total_cost) / sum(purchases_count))
+         when sum(purchases_count) = 0 then 0
+	 else round(sum(total_cost) / sum(purchases_count))
     end as cppu,
     round(((sum(revenue) - sum(total_cost)) / sum(total_cost)) * 100) as roi
 from
@@ -18,18 +18,20 @@ from
         sum(va.daily_spent) as total_cost,
         count(l.lead_id) over (partition by s.visit_date) as leads_count,
         count(l.lead_id) filter (where l.status_id = 142) as purchases_count,
-        sum(amount) filter (where l.status_id = 142) as revenue
+        sum(l.amount) filter (where l.status_id = 142) as revenue
     from sessions as s
     left join vk_ads as va
         on
             s.medium = va.utm_medium
-	    and s.source = va.utm_source
-	    and s.campaign = va.utm_campaign
+             and s.source = va.utm_source
+	     and s.campaign = va.utm_campaign
     left join leads as l
         on
             s.visitor_id = l.visitor_id
-    group by s.visitor_id, l.lead_id, s.visit_date,
-        va.utm_campaign, va.utm_source, va.utm_medium) as tab
+    group by
+        s.visitor_id, l.lead_id, s.visit_date,
+        va.utm_campaign, va.utm_source, va.utm_medium
+) as tab
 where utm_campaign is not null
 group by utm_campaign, utm_source, utm_medium
 union
@@ -37,31 +39,37 @@ select
     utm_campaign, utm_source, utm_medium,
     round(sum(total_cost) / sum(visitors_count)) as cpu,
     case
-        when sum(leads_count) = 0 then 0
-	else round(sum(total_cost) / sum(leads_count))
+         when sum(leads_count) = 0 then 0
+	 else round(sum(total_cost) / sum(leads_count))
     end as cpi,
     case
-	when sum(purchases_count) = 0 then 0
-	else round(sum(total_cost) / sum(purchases_count))
+	 when sum(purchases_count) = 0 then 0
+	 else round(sum(total_cost) / sum(purchases_count))
     end as cppu,
     round(((sum(revenue) - sum(total_cost)) / sum(total_cost)) * 100) as roi
 from
-    (select ya.utm_campaign, utm_source, utm_medium,
-    count(s.visitor_id) over (partition by visit_date) as visitors_count,
-    sum(ya.daily_spent) as total_cost,
-    count(l.lead_id) over (partition by visit_date) as leads_count,
-    count(l.lead_id) filter(where l.status_id = 142) as purchases_count,
-    sum(amount) filter(where l.status_id = 142) as revenue
+    (select
+        ya.utm_campaign, ya.utm_source, ya.utm_medium,
+        count(s.visitor_id) over (partition by s.visit_date) as visitors_count,
+        sum(ya.daily_spent) as total_cost,
+        count(l.lead_id) over (partition by s.visit_date) as leads_count,
+        count(l.lead_id) filter (where l.status_id = 142) as purchases_count,
+        sum(amount) filter (where l.status_id = 142) as revenue
     from sessions as s
-        left join ya_ads as ya
-        on s.medium = ya.utm_medium and
-        s.source = ya.utm_source and
-        s.campaign = ya.utm_campaign
-        left join leads as l
-        on s.visitor_id = l.visitor_id
-    group by s.visitor_id, l.lead_id, visit_date, utm_campaign, utm_source, utm_medium) as tab
+    left join ya_ads as ya
+        on
+            s.medium = ya.utm_medium
+            and s.source = ya.utm_source
+            and s.campaign = ya.utm_campaign
+    left join leads as l
+        on
+	    s.visitor_id = l.visitor_id
+    group by
+        s.visitor_id, l.lead_id, visit_date, utm_campaign, utm_source, utm_medium
+) as tab
 where utm_campaign is not null
-group by utm_campaign, utm_source, utm_medium
+group by
+        utm_campaign, utm_source, utm_medium
 
 
 --dashboard day/week/month count
