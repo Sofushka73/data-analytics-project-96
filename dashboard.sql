@@ -16,7 +16,10 @@ select
         when sum(purchases_count) = 0 then 0
         else round(sum(total_cost) / sum(purchases_count))
     end as cppu,
-    round(((sum(revenue) - sum(total_cost)) / sum(total_cost)) * 100) as roi
+    round(((
+        sum(revenue) - sum(total_cost))
+	/ sum(total_cost)) * 100
+    ) as roi
 from (
     select
         va.utm_campaign,
@@ -175,8 +178,8 @@ select
     tab.utm_source,
     tab.utm_medium,
     tab.utm_campaign,
-    tab.revenue -
-    tab.total_cost as profit
+    tab.revenue
+    - tab.total_cost as profit
 from (
     select
         ya.utm_source,
