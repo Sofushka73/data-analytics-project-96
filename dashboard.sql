@@ -4,8 +4,10 @@ select
     utm_campaign,
     utm_source,
     utm_medium,
-    round(sum(total_cost) /
-    sum(visitors_count)) as cpu,
+    round(
+        sum(total_cost)
+    / sum(visitors_count)
+    ) as cpu,
     case
         when sum(leads_count) = 0 then 0
         else round(sum(total_cost) / sum(leads_count))
@@ -130,8 +132,8 @@ left join leads as l
 	s.visitor_id = l.visitor_id
 union
 select
-    (tabb.leads_count * 100.0) /
-    tabb.lead_count as conversion
+    (tabb.leads_count * 100.0)
+    / tabb.lead_count as conversion
 from (
     select
         count(distinct l.lead_id) as lead_count,
