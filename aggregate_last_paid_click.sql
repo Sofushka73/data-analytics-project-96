@@ -1,6 +1,5 @@
 with tab1 as (
-    select
-        distinct on (s.visitor_id)
+    select distinct on (s.visitor_id)
         s.visitor_id,
         s.visit_date,
         l.created_at,
