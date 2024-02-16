@@ -1,6 +1,9 @@
 --dashboard utm_all
+
 select
-    utm_campaign, utm_source, utm_medium,
+    utm_campaign,
+    utm_source,
+    utm_medium,
     round(sum(total_cost) / sum(visitors_count)) as cpu,
     case
         when sum(leads_count) = 0 then 0
@@ -13,7 +16,9 @@ select
     round(((sum(revenue) - sum(total_cost)) / sum(total_cost)) * 100) as roi
 from (
     select
-        va.utm_campaign, va.utm_source, va.utm_medium,
+        va.utm_campaign,
+	va.utm_source,
+	va.utm_medium,
         count(s.visitor_id) over (partition by s.visit_date) as visitors_count,
         sum(va.daily_spent) as total_cost,
         count(l.lead_id) over (partition by s.visit_date) as leads_count,
@@ -36,7 +41,9 @@ where utm_campaign is not null
 group by utm_campaign, utm_source, utm_medium
 union
 select
-    utm_campaign, utm_source, utm_medium,
+    utm_campaign,
+    utm_source,
+    utm_medium,
     round(sum(total_cost) / sum(visitors_count)) as cpu,
     case
         when sum(leads_count) = 0 then 0
@@ -49,7 +56,9 @@ select
     round(((sum(revenue) - sum(total_cost)) / sum(total_cost)) * 100) as roi
 from (
     select
-        ya.utm_campaign, ya.utm_source, ya.utm_medium,
+        ya.utm_campaign,
+	ya.utm_source,
+	ya.utm_medium,
         count(s.visitor_id) over (partition by s.visit_date)
 	as visitors_count,
         sum(ya.daily_spent) as total_cost,
@@ -77,7 +86,9 @@ group by
 --dashboard day/week/month count
 
 select
-    va.utm_source, va.utm_medium, va.utm_campaign,
+    va.utm_source,
+    va.utm_medium,
+    va.utm_campaign,
     date_trunc('month', s.visit_date) as visit_date,
     count(distinct s.visitor_id) as visitors_count
 from sessions as s
@@ -90,7 +101,9 @@ where va.utm_source is not null
 group by date_trunc('month', visit_date), va.utm_source, va.utm_medium, va.utm_campaign
 union
 select
-    ya.utm_source, ya.utm_medium, ya.utm_campaign,
+    ya.utm_source,
+    ya.utm_medium,
+    ya.utm_campaign,
     date_trunc('month', s.visit_date) as visit_date,
     count(distinct s.visitor_id) as visitors_count
 from sessions as s
@@ -126,7 +139,9 @@ from (
 --dashboard profit
 
 select
-    tab.utm_source, tab.utm_medium, tab.utm_campaign,
+    tab.utm_source,
+    tab.utm_medium,
+    tab.utm_campaign,
     tab.revenue - tab.total_cost as profit
 from (
     select
@@ -148,7 +163,9 @@ from (
 ) as tab
 union
 select
-    tab.utm_source, tab.utm_medium, tab.utm_campaign,
+    tab.utm_source,
+    tab.utm_medium,
+    tab.utm_campaign,
     tab.revenue - tab.total_cost as profit
 from (
     select
@@ -172,13 +189,18 @@ from (
 --dashboard day/week/month total cost
 
 select
-    utm_source, utm_medium, utm_campaign,
-    visit_date, total_cost
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    visit_date,
+    total_cost
 from (
     select
-        va.utm_source, va.utm_medium, va.utm_campaign,
+        va.utm_source,
+	va.utm_medium,
+	va.utm_campaign,
         to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd') as visit_date,
-        sum (va.daily_spent) as total_cost
+        sum(va.daily_spent) as total_cost
     from sessions as s
     left join vk_ads as va
         on 
@@ -191,11 +213,16 @@ from (
 ) as tab
 union
 select
-    utm_source, utm_medium, utm_campaign,
-    visit_date, total_cost
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    visit_date,
+    total_cost
 from (
     select
-        ya.utm_source, ya.utm_medium, ya.utm_campaign,
+        ya.utm_source,
+	ya.utm_medium,
+	ya.utm_campaign,
         to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd')
 	as visit_date,
         sum(ya.daily_spent) as total_cost
@@ -233,9 +260,12 @@ select max(created_at)
 	
 from (
     select
-        distinct s.visitor_id, l.lead_id,
-        s.visit_date, l.created_at,
-        l.status_id, l.created_at - s.visit_date as time
+        distinct s.visitor_id,
+	l.lead_id,
+        s.visit_date,
+	l.created_at,
+        l.status_id,
+	l.created_at - s.visit_date as time
     from sessions as s
     left join leads as l
         on
@@ -250,8 +280,10 @@ select avg(time)
 from (
     select
         distinct s.visitor_id,
-        l.lead_id, s.visit_date,
-        l.created_at, status_id,
+        l.lead_id,
+	s.visit_date,
+        l.created_at,
+	status_id,
         l.created_at - s.visit_date as time
     from sessions as s
     left join leads as l
@@ -270,8 +302,11 @@ select
     count(visitor_id) 
 from (
     select
-        distinct s.visitor_id, l.lead_id,
-        s.visit_date, l.created_at, l.status_id,
+        distinct s.visitor_id,
+	l.lead_id,
+        s.visit_date,
+	l.created_at,
+	l.status_id,
         l.created_at - s.visit_date as time 
     from sessions as s
     left join leads as l
