@@ -4,7 +4,8 @@ select
     utm_campaign,
     utm_source,
     utm_medium,
-    round(sum(total_cost) / sum(visitors_count)) as cpu,
+    round(sum(total_cost) /
+    sum(visitors_count)) as cpu,
     case
         when sum(leads_count) = 0 then 0
         else round(sum(total_cost) / sum(leads_count))
@@ -44,7 +45,8 @@ select
     utm_campaign,
     utm_source,
     utm_medium,
-    round(sum(total_cost) / sum(visitors_count)) as cpu,
+    round(sum(total_cost) /
+    sum(visitors_count)) as cpu,
     case
         when sum(leads_count) = 0 then 0
 	else round(sum(total_cost) / sum(leads_count))
@@ -120,21 +122,23 @@ group by
 --dashboard conversion
 
 select
-(count(distinct l.lead_id) * 100.0) / count(distinct s.visitor_id) as conversion
+    (count(distinct l.lead_id) * 100.0) /
+    count(distinct s.visitor_id) as conversion
 from sessions as s
 left join leads as l
     on
 	s.visitor_id = l.visitor_id
 union
 select
-    (tab.leads_count * 100.0) / tab.lead_count as conversion
+    (tabb.leads_count * 100.0) /
+    tabb.lead_count as conversion
 from (
     select
         count(distinct l.lead_id) as lead_count,
         count(distinct l.lead_id) filter (where l.status_id = '142')
 	as leads_count
     from leads
-) as tab
+) as tabb
 
 --dashboard profit
 
@@ -142,10 +146,13 @@ select
     tab.utm_source,
     tab.utm_medium,
     tab.utm_campaign,
-    tab.revenue - tab.total_cost as profit
+    tab.revenue -
+    tab.total_cost as profit
 from (
     select
-        va.utm_source, va.utm_medium, va.utm_campaign,
+        va.utm_source,
+	va.utm_medium,
+	va.utm_campaign,
         sum(va.daily_spent) as total_cost,
         sum(l.amount) as revenue
     from sessions as s
@@ -166,10 +173,13 @@ select
     tab.utm_source,
     tab.utm_medium,
     tab.utm_campaign,
-    tab.revenue - tab.total_cost as profit
+    tab.revenue -
+    tab.total_cost as profit
 from (
     select
-        ya.utm_source, ya.utm_medium, ya.utm_campaign,
+        ya.utm_source,
+	ya.utm_medium,
+	ya.utm_campaign,
         sum(ya.daily_spent) as total_cost,
         sum(l.amount) as revenue
     from sessions as s
@@ -228,7 +238,7 @@ from (
         sum(ya.daily_spent) as total_cost
     from sessions as s
     left join ya_ads as ya
-        on 
+        on
 	    s.source = ya.utm_source
             and s.medium = ya.utm_medium
             and s.campaign = ya.utm_campaign
@@ -254,7 +264,8 @@ where utm_source is null and created_at <= '2023-06-30 18:28:25.000'
 	
 -- created_at <= '2023-06-01 01:58:59.000'
 
-select max(created_at)
+select
+    max(created_at)
 	
 --min(created_at)
 	
