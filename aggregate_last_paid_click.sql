@@ -1,8 +1,16 @@
 with tab1 as (
-    select distinct on (s.visitor_id)
-        s.visitor_id, s.visit_date,
-        l.created_at, l.status_id, l.amount, l.lead_id, l.closing_reason,
-        s.medium, s.source, s.campaign
+    select
+        distinct on (s.visitor_id)
+        s.visitor_id,
+        s.visit_date,
+        l.created_at,
+        l.status_id,
+        l.amount,
+        l.lead_id,
+        l.closing_reason,
+        s.medium,
+        s.source,
+        s.campaign
     from sessions as s
     left join leads as l
         on
@@ -14,7 +22,9 @@ with tab1 as (
 ,
 tab as (
     select
-        va.utm_source, va.utm_medium, va.utm_campaign,
+        va.utm_source,
+        va.utm_medium,
+        va.utm_campaign,
         cast(va.campaign_date as date) as campaign_date,
         sum(va.daily_spent) as total_cost
     from vk_ads as va
@@ -23,7 +33,9 @@ tab as (
         cast(va.campaign_date as date)
     union
     select
-        ya.utm_source, ya.utm_medium, ya.utm_campaign,
+        ya.utm_source,
+        ya.utm_medium,
+        ya.utm_campaign,
         cast(ya.campaign_date as date) as campaign_date,
         sum(ya.daily_spent) as total_cost
     from ya_ads as ya
@@ -34,9 +46,11 @@ tab as (
 ,
 tab2 as (
     select
-        tab1.source, tab1.medium, tab1.campaign,
-        cast(visit_date as date) as visit_date, count(visitor_id)
-        as visitors_count,
+        tab1.source,
+        tab1.medium,
+        tab1.campaign,
+        cast(visit_date as date) as visit_date,
+        count(visitor_id) as visitors_count,
         count(visitor_id) filter (where tab1.created_at is not null)
         as leads_count,
         count(visitor_id) filter (where tab1.status_id = 142)
@@ -49,10 +63,14 @@ tab2 as (
 
 select
     to_char(tab2.visit_date, 'yyyy-mm-dd') as visit_date,
-    tab2.visitors_count, tab2.source as utm_source,
-    tab2.medium as utm_medium, tab2.campaign as utm_campaign,
-    tab.total_cost, tab2.leads_count,
-    tab2.purchases_count, tab2.revenue
+    tab2.visitors_count,
+    tab2.source as utm_source,
+    tab2.medium as utm_medium,
+    tab2.campaign as utm_campaign,
+    tab.total_cost,
+    tab2.leads_count,
+    tab2.purchases_count,
+    tab2.revenue
 from tab2
 left join tab
     on
