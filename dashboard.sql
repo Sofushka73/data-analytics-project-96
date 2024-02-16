@@ -18,7 +18,8 @@ select
     end as cppu,
     round(((
         sum(revenue) - sum(total_cost))
-	/ sum(total_cost)) * 100
+	/ sum(total_cost)
+    ) * 100
     ) as roi
 from (
     select
@@ -50,8 +51,9 @@ select
     utm_campaign,
     utm_source,
     utm_medium,
-    round(sum(total_cost) /
-    sum(visitors_count)) as cpu,
+    round(sum(total_cost)
+    / sum(visitors_count)
+    ) as cpu,
     case
         when sum(leads_count) = 0 then 0
 	else round(sum(total_cost) / sum(leads_count))
