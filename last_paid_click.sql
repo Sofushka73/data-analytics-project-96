@@ -1,13 +1,21 @@
 select
-    tabb.visitor_id, tabb.visit_date, tabb.source as utm_source,
-    tabb.medium as utm_medium, tabb.campaign as utm_campaign,
-    l.lead_id, l.created_at, sum(l.amount) as amount,
-    l.closing_reason, l.status_id
+    tabb.visitor_id,
+    tabb.visit_date,
+    tabb.source as utm_source,
+    tabb.medium as utm_medium,
+    tabb.campaign as utm_campaign,
+    l.lead_id,
+    l.created_at,
+    sum(l.amount) as amount,
+    l.closing_reason,
+    l.status_id
 from
     (
         select distinct on (s.visitor_id)
             s.visitor_id,
-            s.visit_date, s.source, s.medium,
+            s.visit_date,
+            s.source,
+            s.medium,
             s.campaign
         from sessions as s
         where
@@ -15,7 +23,7 @@ from
             or s.medium = 'cpa' or s.medium = 'youtube'
             or s.medium = 'cpp' or s.medium = 'tg'
             or s.medium = 'social'
-        order by s.visitor_id, s.visit_date desc
+        order by s.visitor_id asc, s.visit_date desc
     ) as tabb
 left join leads as l
     on
