@@ -17,7 +17,8 @@ select
         else round(sum(total_cost) / sum(purchases_count))
     end as cppu,
     round(((
-        sum(revenue) - sum(total_cost))
+        sum(revenue) - sum(total_cost)
+    )
 	/ sum(total_cost)
     ) * 100
     ) as roi
@@ -51,7 +52,8 @@ select
     utm_campaign,
     utm_source,
     utm_medium,
-    round(sum(total_cost)
+    round(
+        sum(total_cost)
     / sum(visitors_count)
     ) as cpu,
     case
@@ -138,7 +140,7 @@ left join leads as l
 union
 select
     (tabb.leads_count * 100.0)
-    / tabb.lead_count as conversion
+    / tabb.lead_count as conversionn
 from (
     select
         count(distinct l.lead_id) as lead_count,
