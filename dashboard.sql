@@ -282,7 +282,8 @@ select
 --min(created_at)
 
 from (
-    select distinct s.visitor_id,
+    select distinct
+	s.visitor_id,
 	l.lead_id,
         s.visit_date,
 	l.created_at,
@@ -300,7 +301,8 @@ from (
 
 select avg(time)
 from (
-    select distinct s.visitor_id,
+    select distinct
+	s.visitor_id,
         l.lead_id,
 	s.visit_date,
         l.created_at,
@@ -311,7 +313,7 @@ from (
         on
 	    s.visitor_id = l.visitor_id
             and l.created_at > s.visit_date
-      where status_id = '142'
+      where l.status_id = '142'
       order by s.visit_date asc, l.created_at asc
 ) as tab
 ;
@@ -322,7 +324,8 @@ from (
 select
     count(visitor_id) 
 from (
-    select distinct s.visitor_id,
+    select distinct
+	s.visitor_id,
 	l.lead_id,
         s.visit_date,
 	l.created_at,
