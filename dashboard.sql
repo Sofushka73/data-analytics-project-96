@@ -93,7 +93,7 @@ from (
 where utm_campaign is not null
 group by
     utm_campaign, utm_source, utm_medium
-
+;
 --dashboard day/week/month count
 
 select
@@ -127,7 +127,7 @@ where ya.utm_source is not null
 group by
     date_trunc('month', s.visit_date), ya.utm_source, ya.utm_medium,
     ya.utm_campaign
-
+;
 --dashboard conversion
 
 select
@@ -148,7 +148,7 @@ from (
 	as leads_count
     from leads
 ) as tabb
-
+;
 --dashboard profit
 
 select
@@ -204,7 +204,7 @@ from (
     group by
         ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
-
+;
 --dashboard day/week/month total cost
 
 select
@@ -255,7 +255,7 @@ from (
     group by
         ya.utm_source, ya.utm_medium, ya.utm_campaign
 ) as tab
-
+;
 
 --Вычисления для выявлелия кореляции между запуском рекламы и ростом органики
 select
@@ -270,7 +270,7 @@ left join leads as l
     on
 	s.visitor_id = l.visitor_id
 where utm_source is null and created_at <= '2023-06-30 18:28:25.000'
-	
+;	
 -- created_at <= '2023-06-01 01:58:59.000'
 
 select
@@ -293,7 +293,7 @@ from (
     where status_id = '142'
     order by s.visit_date asc, l.created_at asc
 ) as tab
-
+;
 --Вычисление времени когда можно начинать анализ дашборда
 	
 select avg(time)
@@ -313,7 +313,7 @@ from (
       where status_id = '142'
       order by s.visit_date asc, l.created_at asc
 ) as tab
-
+;
 --вычисления где вычислялся промежуток покрытия 90%
 	
 --select min/max(time)
