@@ -109,7 +109,8 @@ left join vk_ads as va
         and s.medium = va.utm_medium
         and s.campaign = va.utm_campaign
 where va.utm_source is not null
-group by date_trunc('month', visit_date), va.utm_source, va.utm_medium,
+group by
+    date_trunc('month', visit_date), va.utm_source, va.utm_medium,
     va.utm_campaign
 union
 select
@@ -167,7 +168,7 @@ from (
         sum(l.amount) as revenue
     from sessions as s
     left join vk_ads as va
-        on 
+        on
             s.source = va.utm_source
             and s.medium = va.utm_medium
             and s.campaign = va.utm_campaign
@@ -271,7 +272,7 @@ left join vk_ads as va
 left join leads as l
     on
 	s.visitor_id = l.visitor_id
-where utm_source is null and l.created_at <= '2023-06-30 18:28:25.000'
+where va.utm_source is null and l.created_at <= '2023-06-30 18:28:25.000'
 ;
 -- created_at <= '2023-06-01 01:58:59.000'
 
@@ -299,8 +300,7 @@ from (
 
 select avg(time)
 from (
-    select
-        distinct s.visitor_id,
+    select distinct s.visitor_id,
         l.lead_id,
 	s.visit_date,
         l.created_at,
@@ -322,13 +322,12 @@ from (
 select
     count(visitor_id) 
 from (
-    select
-        distinct s.visitor_id,
+    select distinct s.visitor_id,
 	l.lead_id,
         s.visit_date,
 	l.created_at,
 	l.status_id,
-        l.created_at - s.visit_date as time 
+        l.created_at - s.visit_date as time
     from sessions as s
     left join leads as l
         on
