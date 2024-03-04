@@ -109,7 +109,8 @@ left join vk_ads as va
         and s.medium = va.utm_medium
         and s.campaign = va.utm_campaign
 where va.utm_source is not null
-group by date_trunc('month', visit_date), va.utm_source, va.utm_medium, va.utm_campaign
+group by date_trunc('month', visit_date), va.utm_source, va.utm_medium,
+    va.utm_campaign
 union
 select
     ya.utm_source,
@@ -131,8 +132,8 @@ group by
 --dashboard conversion
 
 select
-    (count(distinct l.lead_id) * 100.0) /
-    count(distinct s.visitor_id) as conversion
+    (count(distinct l.lead_id) * 100.0)
+    / count(distinct s.visitor_id) as conversion
 from sessions as s
 left join leads as l
     on
@@ -155,8 +156,8 @@ select
     tab.utm_source,
     tab.utm_medium,
     tab.utm_campaign,
-    tab.revenue -
-    tab.total_cost as profit
+    tab.revenue
+    - tab.total_cost as profit
 from (
     select
         va.utm_source,
@@ -172,7 +173,7 @@ from (
             and s.campaign = va.utm_campaign
     left join leads as l
         on
-            s.visitor_id  = l.visitor_id
+            s.visitor_id = l.visitor_id
     where va.utm_source is not null
     group by
         va.utm_source, va.utm_medium, va.utm_campaign
@@ -218,11 +219,12 @@ from (
         va.utm_source,
 	va.utm_medium,
 	va.utm_campaign,
-        to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd') as visit_date,
+        to_char((date_trunc('month', s.visit_date)), 'yyyy-mm-dd')
+	as visit_date,
         sum(va.daily_spent) as total_cost
     from sessions as s
     left join vk_ads as va
-        on 
+        on
 	    s.source = va.utm_source
             and s.medium = va.utm_medium
             and s.campaign = va.utm_campaign
@@ -269,18 +271,17 @@ left join vk_ads as va
 left join leads as l
     on
 	s.visitor_id = l.visitor_id
-where utm_source is null and created_at <= '2023-06-30 18:28:25.000'
-;	
+where utm_source is null and l.created_at <= '2023-06-30 18:28:25.000'
+;
 -- created_at <= '2023-06-01 01:58:59.000'
 
 select
     max(created_at)
-	
+
 --min(created_at)
-	
+
 from (
-    select
-        distinct s.visitor_id,
+    select distinct s.visitor_id,
 	l.lead_id,
         s.visit_date,
 	l.created_at,
@@ -290,12 +291,12 @@ from (
     left join leads as l
         on
 	    s.visitor_id = l.visitor_id
-    where status_id = '142'
+    where l.status_id = '142'
     order by s.visit_date asc, l.created_at asc
 ) as tab
 ;
 --Вычисление времени когда можно начинать анализ дашборда
-	
+
 select avg(time)
 from (
     select
@@ -303,7 +304,7 @@ from (
         l.lead_id,
 	s.visit_date,
         l.created_at,
-	status_id,
+	l.status_id,
         l.created_at - s.visit_date as time
     from sessions as s
     left join leads as l
@@ -315,9 +316,9 @@ from (
 ) as tab
 ;
 --вычисления где вычислялся промежуток покрытия 90%
-	
+
 --select min/max(time)
-	
+
 select
     count(visitor_id) 
 from (
@@ -333,7 +334,7 @@ from (
         on
 	    s.visitor_id = l.visitor_id
             and l.created_at > s.visit_date
-    where status_id = '142'
+    where l.status_id = '142'
     order by s.visit_date asc, l.created_at asc
     ) as tab
 where time between '00:17:16.678171' and '23 days 09:25:25'
