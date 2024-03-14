@@ -264,7 +264,7 @@ from (
         s.visit_date,
         l.created_at,
         l.status_id,
-        l.created_at - s.visit_date as time
+        l.created_at - s.visit_date as times
     from sessions as s
     left join leads as l
         on
@@ -283,7 +283,7 @@ from (
         s.visit_date,
         l.created_at,
         l.status_id,
-        l.created_at - s.visit_date as time
+        l.created_at - s.visit_date as times
     from sessions as s
     left join leads as l
         on
@@ -305,7 +305,7 @@ from (
         s.visit_date,
         l.created_at,
         l.status_id,
-        l.created_at - s.visit_date as time
+        l.created_at - s.visit_date as times
     from sessions as s
     left join leads as l
         on
@@ -315,4 +315,3 @@ from (
     order by s.visit_date asc, l.created_at asc
 ) as tab
 where time between '00:17:16.678171' and '23 days 09:25:25'
-
