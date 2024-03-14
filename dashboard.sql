@@ -314,4 +314,4 @@ from (
     where l.status_id = '142'
     order by s.visit_date asc, l.created_at asc
 ) as tab
-where time between '00:17:16.678171' and '23 days 09:25:25'
+where times between '00:17:16.678171' and '23 days 09:25:25'
